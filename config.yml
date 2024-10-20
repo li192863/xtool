@@ -1,0 +1,103 @@
+# Configs for connection tool
+connect:
+  # A modified tool of ssh.
+  xssh:
+    # Login user
+    user: root
+    # Login password
+    password: Changeme
+    # Command
+    command: ""
+    # Options feed to ssh
+    options: ["-q", "-o", "StrictHostKeyChecking=no"]
+  # A modified tool of ssh-copy-id
+  xssh-copy-id:
+    # Login user
+    user: root
+    # Login password
+    password: Changeme
+    # Identity file
+    identity_file: ""
+    # Options feed to ssh-copy-id
+    options: ["-o", "StrictHostKeyChecking=no"]
+
+# Configs for sync tool
+sync:
+  # A modified tool of rsync for uploading
+  xrsyncu:
+    # Login user
+    user: root
+    # Login password
+    password: Changeme
+    # Destination
+    destination: "~"
+    # Options feed to rsync
+    options: ["-a"]
+  # A modified tool of rsync for downloading
+  xrsyncd:
+    # Login user
+    user: root
+    # Login password
+    password: Changeme
+    # Destination
+    destination: "/tmp"
+    # Options feed to rsync
+    options: ["-a"]
+  # A modified tool of scp for uploading
+  xscpu:
+    # Login user
+    user: root
+    # Login password
+    password: Changeme
+    # Destination
+    destination: "~"
+    # Options feed to scp
+    options: ["-q", "-o", "StrictHostKeyChecking=no"]
+  # A modified tool of scp for downloading
+  xscpd:
+    # Login user
+    user: root
+    # Login password
+    password: Changeme
+    # Destination
+    destination: "/tmp"
+    # Options feed to scp
+    options: ["-q", "-o", "StrictHostKeyChecking=no"]
+
+# Configs for file system tool
+file_system:
+  # A modified tool of sshfs
+  xsshfs:
+    # Login user
+    user: root
+    # Source dir
+    src_dir: "/"
+    # Destination dir
+    dest_dir: "/mnt"
+    # Options feed to sshfs
+    options: ["-o", "allow_other", "-o", "StrictHostKeyChecking=no"]
+  # A modified tool of umount
+  xumount:
+    # Destination dir
+    dest_dir: "/mnt"
+    # Options feed to umount
+    options: []
+  # A combined tool of xsshfs and xumount to mount and unmount a remote file system locally.
+  xfs:
+    # Login user
+    user: root
+    # Source dir
+    src_dir: "/"
+    # Destination dir
+    dest_dir: "/mnt"
+
+# Configs for execution tool
+execute:
+  # A combined tool of xscp and xssh to run a local script on a remote machine.
+  xscript:
+    # Login user
+    user: root
+    # Login password
+    password: Changeme
+    # Destination dir
+    destination: "~"
