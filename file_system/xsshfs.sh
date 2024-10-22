@@ -18,7 +18,7 @@ xsshfs() {
   local user=$(get_config '.file_system.xsshfs.user')
   local src_dir=$(get_config '.file_system.xsshfs.src_dir')
   local dest_dir=$(get_config '.file_system.xsshfs.dest_dir')
-  local options=$(get_config '.file_system.xsshfs.options | join(" ")')
+  local options=($(get_config '.file_system.xsshfs.options | join(" ")'))
   # positional args
   local args=()
   # named args
@@ -60,9 +60,9 @@ xsshfs() {
     return 1
   fi
   # mount target
-  echo "sudo sshfs $options $user@$ip:$src_dir $mount_point"
+  echo "sudo sshfs "${options[@]}" $user@$ip:$src_dir $mount_point"
   sudo mkdir -p "$mount_point"
-  sudo sshfs $options "$user"@"$ip":"$src_dir" "$mount_point"
+  sudo sshfs "${options[@]}" "$user"@"$ip":"$src_dir" "$mount_point"
   # clean if failed
   local return_status="$?"
   if [ "$return_status" != 0 ]; then

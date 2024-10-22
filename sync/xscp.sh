@@ -19,7 +19,7 @@ xscpu() {
   local user=$(get_config '.sync.xscpu.user')
   local pass=$(get_config '.sync.xscpu.password')
   local dest=$(get_config '.sync.xscpu.destination')
-  local options=$(get_config '.sync.xscpu.options | join(" ")')
+  local options=($(get_config '.sync.xscpu.options | join(" ")'))
   # positional args
   local args=()
   # named args
@@ -62,8 +62,8 @@ xscpu() {
   fi
 
   # Execute
-  echo "scp $options $src $user@$ip:$dest"
-  sshpass -p "$pass" scp $options "$src" "$user"@"$ip":"$dest"
+  echo "scp "${options[@]}" $src $user@$ip:$dest"
+  sshpass -p "$pass" scp "${options[@]}" "$src" "$user"@"$ip":"$dest"
 }
 
 xscpd_usage() {
@@ -78,15 +78,11 @@ xscpd_usage() {
 
 xscpd() {
   # Parse args
-  local user=$(get_config '.sync.xscpu.user')
-  local pass=$(get_config '.sync.xscpu.password')
-  local dest=$(get_config '.sync.xscpu.destination')
-  local options=$(get_config '.sync.xscpu.options | join(" ")')
   # set defaults
   local user=$(get_config '.sync.xscpd.user')
   local pass=$(get_config '.sync.xscpd.password')
   local dest=$(get_config '.sync.xscpd.destination')
-  local options=$(get_config '.sync.xscpd.options | join(" ")')
+  local options=($(get_config '.sync.xscpd.options | join(" ")'))
   # positional args
   local args=()
   # named args
@@ -129,6 +125,6 @@ xscpd() {
   fi
 
   # Execute
-  echo "scp $options $user@$ip:$src $dest"
-  sshpass -p "$pass" scp $options "$user"@"$ip":"$src" "$dest"
+  echo "scp "${options[@]}" $user@$ip:$src $dest"
+  sshpass -p "$pass" scp "${options[@]}" "$user"@"$ip":"$src" "$dest"
 }

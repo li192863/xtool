@@ -19,7 +19,7 @@ xssh-copy-id() {
   local user=$(get_config '.connect.xssh-copy-id.user')
   local pass=$(get_config '.connect.xssh-copy-id.password')
   local identity_file=$(get_config '.connect.xssh-copy-id.identity_file')
-  local options=$(get_config '.connect.xssh-copy-id.options | join(" ")')
+  local options=($(get_config '.connect.xssh-copy-id.options | join(" ")'))
   # positional args
   local args=()
   # named args
@@ -57,10 +57,10 @@ xssh-copy-id() {
 
   # Execute
   if [ -z "$identity_file" ]; then
-    echo "ssh-copy-id $options $user@$ip"
-    sshpass -p "$pass" ssh-copy-id $options "$user"@"$ip" &>/dev/null
+    echo "ssh-copy-id "${options[@]}" $user@$ip"
+    sshpass -p "$pass" ssh-copy-id "${options[@]}" "$user"@"$ip" &>/dev/null
   else
-    echo "ssh-copy-id -i $identity_file $options $user@$ip"
-    sshpass -p "$pass" ssh-copy-id -i "$identity_file" $options "$user"@"$ip" &>/dev/null
+    echo "ssh-copy-id -i $identity_file "${options[@]}" $user@$ip"
+    sshpass -p "$pass" ssh-copy-id -i "$identity_file" "${options[@]}" "$user"@"$ip" &>/dev/null
   fi
 }

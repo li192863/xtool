@@ -19,7 +19,7 @@ xssh() {
   local user=$(get_config '.connect.xssh.user')
   local pass=$(get_config '.connect.xssh.password')
   local cmd=$(get_config '.connect.xssh.command')
-  local options=$(get_config '.connect.xssh.options | join(" ")')
+  local options=($(get_config '.connect.xssh.options | join(" ")'))
   # positional args
   local args=()
   # named args
@@ -57,10 +57,10 @@ xssh() {
 
   #Execute
   if [ -z "$cmd" ]; then
-    echo "ssh $options $user@$ip"
-    sshpass -p "$pass" ssh $options "$user"@"$ip"
+    echo "ssh "${options[@]}" $user@$ip"
+    sshpass -p "$pass" ssh "${options[@]}" "$user"@"$ip"
   else
-    echo "ssh $options $user@$ip $cmd"
-    sshpass -p "$pass" ssh $options "$user"@"$ip" "$cmd"
+    echo "ssh "${options[@]}" $user@$ip $cmd"
+    sshpass -p "$pass" ssh "${options[@]}" "$user"@"$ip" "$cmd"
   fi
 }
