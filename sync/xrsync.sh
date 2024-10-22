@@ -19,7 +19,7 @@ xrsyncu() {
   local user=$(get_config '.sync.xrsyncu.user')
   local pass=$(get_config '.sync.xrsyncu.password')
   local dest=$(get_config '.sync.xrsyncu.destination')
-  local options=$(get_config '.sync.xrsyncu.options | join(" ")')
+  local options=($(get_config '.sync.xrsyncu.options | join(" ")'))
   # positional args
   local args=()
   # named args
@@ -62,8 +62,8 @@ xrsyncu() {
   fi
 
   # Execute
-  echo "rsync $options $src $user@$ip:$dest"
-  sshpass -p "$pass" rsync $options "$src" "$user"@"$ip":"$dest" &>/dev/null
+  echo "rsync "${options[@]}" $src $user@$ip:$dest"
+  sshpass -p "$pass" rsync "${options[@]}" "$src" "$user"@"$ip":"$dest" &>/dev/null
 }
 
 xrsyncd_usage() {
@@ -81,7 +81,7 @@ xrsyncd() {
   local user=$(get_config '.sync.xrsyncd.user')
   local pass=$(get_config '.sync.xrsyncd.password')
   local dest=$(get_config '.sync.xrsyncd.destination')
-  local options=$(get_config '.sync.xrsyncd.options | join(" ")')
+  local options=($(get_config '.sync.xrsyncd.options | join(" ")'))
   # positional args
   local args=()
   # named args
@@ -124,6 +124,6 @@ xrsyncd() {
   fi
 
   # Execute
-  echo "rsync $options $user@$ip:$src $dest"
-  sshpass -p "$pass" rsync $options "$user"@"$ip":"$src" "$dest" &>/dev/null
+  echo "rsync "${options[@]}" $user@$ip:$src $dest"
+  sshpass -p "$pass" rsync "${options[@]}" "$user"@"$ip":"$src" "$dest" &>/dev/null
 }

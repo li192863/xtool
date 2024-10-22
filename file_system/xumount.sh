@@ -15,7 +15,7 @@ xumount() {
   # Parse args
   # set defaults
   local dest_dir=$(get_config '.file_system.xumount.dest_dir')
-  local options=$(get_config '.file_system.xumount.options | join(" ")')
+  local options=($(get_config '.file_system.xumount.options | join(" ")'))
   # positional args
   local args=()
   # named args
@@ -51,8 +51,8 @@ xumount() {
     return 1
   fi
   # unmount target
-  echo "sudo umount $options $mount_point"
-  sudo umount $options "$mount_point"
+  echo "sudo umount "${options[@]}" $mount_point"
+  sudo umount "${options[@]}" "$mount_point"
   # clean if succeed
   local return_status="$?"
   if [ "$return_status" = 0 ]; then
