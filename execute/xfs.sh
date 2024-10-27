@@ -15,9 +15,9 @@ xfs_usage() {
 xfs() {
   # Parse args
   # set defaults
-  local user=$(get_config '.file_system.xfs.user')
-  local src_dir=$(get_config '.file_system.xfs.src_dir')
-  local dest_dir=$(get_config '.file_system.xfs.dest_dir')
+  local user=$(get_config '.execute.xfs.user')
+  local src_dir=$(get_config '.execute.xfs.src_dir')
+  local dest_dir=$(get_config '.execute.xfs.dest_dir')
   # positional args
   local args=()
   # named args

@@ -82,6 +82,9 @@ file_system:
     dest_dir: "/mnt"
     # Options feed to umount
     options: []
+
+# Configs for execution tool
+execute:
   # A combined tool of xsshfs and xumount to mount and unmount a remote file system locally.
   xfs:
     # Login user
@@ -90,9 +93,6 @@ file_system:
     src_dir: "/"
     # Destination dir
     dest_dir: "/mnt"
-
-# Configs for execution tool
-execute:
   # A combined tool of xscp and xssh to run a local script on a remote machine.
   xscript:
     # Login user
@@ -101,3 +101,13 @@ execute:
     password: Changeme
     # Destination dir
     destination: "~"
+  # A modified tool of xssh with executing previous commands capabilities.
+  xcmd:
+    # Login user
+    user: root
+    # Login password
+    password: Changeme
+    # Command
+    command: ""
+    # Options feed to ssh
+    options: ["-q", "-o", "StrictHostKeyChecking=no"]
