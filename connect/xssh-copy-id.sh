@@ -57,10 +57,12 @@ xssh-copy-id() {
 
   # Execute
   if [ -z "$identity_file" ]; then
-    echo "ssh-copy-id "${options[@]}" $user@$ip"
-    sshpass -p "$pass" ssh-copy-id "${options[@]}" "$user"@"$ip" &>/dev/null
+    local cmd="sshpass -p \"${pass}\" ssh-copy-id ${options[@]} \"${user}\"@\"${ip}\" &>/dev/null"
+    echo "${cmd}"
+    eval "${cmd}"
   else
-    echo "ssh-copy-id -i $identity_file "${options[@]}" $user@$ip"
-    sshpass -p "$pass" ssh-copy-id -i "$identity_file" "${options[@]}" "$user"@"$ip" &>/dev/null
+    local cmd="sshpass -p \"${pass}\" ssh-copy-id -i \"$identity_file\" ${options[@]} \"${user}\"@\"${ip}\" &>/dev/null"
+    echo "${cmd}"
+    eval "${cmd}"
   fi
 }

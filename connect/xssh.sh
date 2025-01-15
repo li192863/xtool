@@ -57,10 +57,12 @@ xssh() {
 
   #Execute
   if [ -z "$cmd" ]; then
-    echo "ssh "${options[@]}" $user@$ip"
-    sshpass -p "$pass" ssh "${options[@]}" "$user"@"$ip"
+    local cmd="sshpass -p \"${pass}\" ssh ${options[@]} \"${user}\"@\"${ip}\""
+    echo "${cmd}"
+    eval "${cmd}"
   else
-    echo "ssh "${options[@]}" $user@$ip $cmd"
-    sshpass -p "$pass" ssh "${options[@]}" "$user"@"$ip" "$cmd"
+    local cmd="sshpass -p \"${pass}\" ssh ${options[@]} \"${user}\"@\"${ip}\" \"${cmd}\""
+    echo "${cmd}"
+    eval "${cmd}"
   fi
 }

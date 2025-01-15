@@ -29,8 +29,6 @@ sync:
     user: root
     # Login password
     password: Changeme
-    # Destination
-    destination: "~"
     # Options feed to rsync
     options: ["-a"]
   # A modified tool of rsync for downloading
@@ -39,8 +37,6 @@ sync:
     user: root
     # Login password
     password: Changeme
-    # Destination
-    destination: "/tmp"
     # Options feed to rsync
     options: ["-a"]
   # A modified tool of scp for uploading
@@ -49,8 +45,6 @@ sync:
     user: root
     # Login password
     password: Changeme
-    # Destination
-    destination: "~"
     # Options feed to scp
     options: ["-q", "-o", "StrictHostKeyChecking=no"]
   # A modified tool of scp for downloading
@@ -59,8 +53,6 @@ sync:
     user: root
     # Login password
     password: Changeme
-    # Destination
-    destination: "/tmp"
     # Options feed to scp
     options: ["-q", "-o", "StrictHostKeyChecking=no"]
 
@@ -101,13 +93,3 @@ execute:
     password: Changeme
     # Destination dir
     destination: "~"
-  # A modified tool of xssh with executing previous commands capabilities.
-  xcmd:
-    # Login user
-    user: root
-    # Login password
-    password: Changeme
-    # Command
-    command: ""
-    # Options feed to ssh
-    options: ["-q", "-o", "StrictHostKeyChecking=no"]

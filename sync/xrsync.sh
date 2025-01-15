@@ -6,7 +6,7 @@
 
 xrsyncu_usage() {
   # Help message
-  echo "usage: xrsyncu [-u <user>] [-p <passwd>] <ip-string> <src> [dest]"
+  echo "usage: xrsyncu [-u <user>] [-p <passwd>] <ip-string> <src>... <dest>"
   echo "   "
   echo "  -u | --user              : Login user"
   echo "  -p | --password          : Login password"
@@ -18,7 +18,6 @@ xrsyncu() {
   # set defaults
   local user=$(get_config '.sync.xrsyncu.user')
   local pass=$(get_config '.sync.xrsyncu.password')
-  local dest=$(get_config '.sync.xrsyncu.destination')
   local options=($(get_config '.sync.xrsyncu.options | join(" ")'))
   # positional args
   local args=()
@@ -47,8 +46,8 @@ xrsyncu() {
   set -- "${args[@]}"
   # set positionals to vars
   local ip=$(get_ip "$1")
-  local src=$(get_path "$2")
-  [ -n "$3" ] && dest="$3"
+  local src=($(get_params_slice 1 -1 "get_path " "" "${args[@]}"))
+  local dest=${args[${#args[@]}]}
   # validate required args
   if [ -z "${ip}" ]; then
     echo "Missing required argument '<ip-string>'." 
@@ -62,13 +61,14 @@ xrsyncu() {
   fi
 
   # Execute
-  echo "rsync "${options[@]}" $src $user@$ip:$dest"
-  sshpass -p "$pass" rsync "${options[@]}" "$src" "$user"@"$ip":"$dest" &>/dev/null
+  local cmd="sshpass -p \"${pass}\" rsync ${options[@]} ${src[@]} \"${user}\"@\"${ip}\":\"${dest}\" &>/dev/null"
+  echo "${cmd}"
+  eval "${cmd}"
 }
 
 xrsyncd_usage() {
   # Help message
-  echo "usage: xrsyncd [-u <user>] [-p <passwd>] <ip-string> <src> [dest]"
+  echo "usage: xrsyncd [-u <user>] [-p <passwd>] <ip-string> <src>... <dest>"
   echo "   "
   echo "  -u | --user              : Login user"
   echo "  -p | --password          : Login password"
@@ -80,7 +80,6 @@ xrsyncd() {
   # set defaults
   local user=$(get_config '.sync.xrsyncd.user')
   local pass=$(get_config '.sync.xrsyncd.password')
-  local dest=$(get_config '.sync.xrsyncd.destination')
   local options=($(get_config '.sync.xrsyncd.options | join(" ")'))
   # positional args
   local args=()
@@ -109,8 +108,8 @@ xrsyncd() {
   set -- "${args[@]}"
   # set positionals to vars
   local ip=$(get_ip "$1")
-  local src="$2"
-  [ -n "$3" ] && dest=$(realpath "$3")
+  local src=($(get_params_slice 1 -1 "echo \"${user}\"@\"${ip}\":" "" "${args[@]}"))
+  local dest=${args[${#args[@]}]}
   # validate required args
   if [ -z "${ip}" ]; then
     echo "Missing required argument '<ip-string>'." 
@@ -124,6 +123,7 @@ xrsyncd() {
   fi
 
   # Execute
-  echo "rsync "${options[@]}" $user@$ip:$src $dest"
-  sshpass -p "$pass" rsync "${options[@]}" "$user"@"$ip":"$src" "$dest" &>/dev/null
+  local cmd="sshpass -p \"${pass}\" rsync ${options[@]} ${src[@]} \"${dest}\" &>/dev/null"
+  echo "${cmd}"
+  eval "${cmd}"
 }

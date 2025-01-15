@@ -6,7 +6,7 @@
 
 xscpu_usage() {
   # Help message
-  echo "usage: xscpu [-u <user>] [-p <passwd>] <ip-string> <src> [dest]"
+  echo "usage: xscpu [-u <user>] [-p <passwd>] <ip-string> <src>... <dest>"
   echo "   "
   echo "  -u | --user              : Login user"
   echo "  -p | --password          : Login password"
@@ -18,7 +18,6 @@ xscpu() {
   # set defaults
   local user=$(get_config '.sync.xscpu.user')
   local pass=$(get_config '.sync.xscpu.password')
-  local dest=$(get_config '.sync.xscpu.destination')
   local options=($(get_config '.sync.xscpu.options | join(" ")'))
   # positional args
   local args=()
@@ -47,28 +46,29 @@ xscpu() {
   set -- "${args[@]}"
   # set positionals to vars
   local ip=$(get_ip "$1")
-  local src=$(get_path "$2")
-  [ -n "$3" ] && dest="$3"
+  local src=($(get_params_slice 1 -1 "get_path " "" "${args[@]}"))
+  local dest=${args[${#args[@]}]}
   # validate required args
   if [ -z "${ip}" ]; then
-    echo "Missing required argument '<ip-string>'." 
+    echo "Missing required argument '<ip-string>'."
     xscpu_usage
     return 1
   fi
   if [ -z "${src}" ]; then
-    echo "Missing required argument '<src>'." 
+    echo "Missing required argument '<src>'."
     xscpu_usage
     return 1
   fi
 
   # Execute
-  echo "scp "${options[@]}" $src $user@$ip:$dest"
-  sshpass -p "$pass" scp "${options[@]}" "$src" "$user"@"$ip":"$dest"
+  local cmd="sshpass -p \"${pass}\" scp ${options[@]} ${src[@]} \"${user}\"@\"${ip}\":\"${dest}\""
+  echo "${cmd}"
+  eval "${cmd}"
 }
 
 xscpd_usage() {
   # Help message
-  echo "usage: xscpd [-u <user>] [-p <passwd>] <ip-string> <src> [dest]"
+  echo "usage: xscpd [-u <user>] [-p <passwd>] <ip-string> <src>... <dest>"
   echo "   "
   echo "  -u | --user              : Login user"
   echo "  -p | --password          : Login password"
@@ -81,7 +81,6 @@ xscpd() {
   # set defaults
   local user=$(get_config '.sync.xscpd.user')
   local pass=$(get_config '.sync.xscpd.password')
-  local dest=$(get_config '.sync.xscpd.destination')
   local options=($(get_config '.sync.xscpd.options | join(" ")'))
   # positional args
   local args=()
@@ -110,21 +109,22 @@ xscpd() {
   set -- "${args[@]}"
   # set positionals to vars
   local ip=$(get_ip "$1")
-  local src="$2"
-  [ -n "$3" ] && dest=$(realpath "$3")
+  local src=($(get_params_slice 1 -1 "echo \"${user}\"@\"${ip}\":" "" "${args[@]}"))
+  local dest=${args[${#args[@]}]}
   # validate required args
   if [ -z "${ip}" ]; then
-    echo "Missing required argument '<ip-string>'." 
+    echo "Missing required argument '<ip-string>'."
     xscpd_usage
     return 1
   fi
   if [ -z "${src}" ]; then
-    echo "Missing required argument '<src>'." 
+    echo "Missing required argument '<src>'."
     xscpu_usage
     return 1
   fi
 
   # Execute
-  echo "scp "${options[@]}" $user@$ip:$src $dest"
-  sshpass -p "$pass" scp "${options[@]}" "$user"@"$ip":"$src" "$dest"
+  local cmd="sshpass -p \"${pass}\" scp ${options[@]} ${src[@]} \"${dest}\""
+  echo "${cmd}"
+  eval "${cmd}"
 }

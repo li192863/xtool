@@ -45,7 +45,7 @@ xfs() {
   [ -n "$3" ] && dest_dir=$(realpath "$3")
   # validate required args
   if [ -z "${ip}" ]; then
-    echo "Missing required argument '<ip-string>'." 
+    echo "Missing required argument '<ip-string>'."
     xfs_usage
     return 1
   fi
@@ -62,8 +62,37 @@ xfs() {
     fi
     return "$return_status"
   fi
-  # ask user to umounted or not if mounted
+
   local msg=$(mount | grep "$mount_point" | awk '{print $1 " -> " $3}')
+  # ask user to umounted if mounted and user is not same
+  local mounted_user=$(mount | grep "$mount_point" | awk -F'@' '{print $1}')
+  if [ "$user" != "$mounted_user" ]; then
+    echo -n "Already mounted: $msg, do you wish to switch user from $mounted_user to $user? [Y/n]"
+    read input
+    input=$(echo "$input" | tr '[:upper:]' '[:lower:]')
+    case "$input" in
+    y | yes | "")
+      # unmount
+      local cur_dir="$(pwd)"
+      if [[ "$(pwd)" == "$mount_point"* ]] || [[ "$(pwd)" == "$mount_point/"* ]]; then
+        cd "$dest_dir"
+      fi
+      xumount "$ip" "$dest_dir"
+      # mounted
+      xsshfs -u "$user" "$ip" "$src_dir" "$dest_dir"
+      local return_status="$?"
+      if [ "$return_status" = 0 ]; then
+        cd "$cur_dir"
+      fi
+      return "$return_status"
+      ;;
+    *)
+      echo "Abort."
+      return 0
+      ;;
+    esac
+  fi
+  # ask user to unmount if mounted and user is same
   echo -n "Already mounted: $msg, do you wish to unmount? [Y/n]: "
   read input
   input=$(echo "$input" | tr '[:upper:]' '[:lower:]')
