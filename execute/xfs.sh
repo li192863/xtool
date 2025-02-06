@@ -64,7 +64,7 @@ xfs() {
   fi
 
   local msg=$(mount | grep "$mount_point" | awk '{print $1 " -> " $3}')
-  # ask user to umounted if mounted and user is not same
+  # ask user to switch user if mounted and user is not same
   local mounted_user=$(mount | grep "$mount_point" | awk -F'@' '{print $1}')
   if [ "$user" != "$mounted_user" ]; then
     echo -n "Already mounted: $msg, do you wish to switch user from $mounted_user to $user? [Y/n]"

@@ -51,8 +51,9 @@ xumount() {
     return 1
   fi
   # unmount target
-  echo "sudo umount "${options[@]}" $mount_point"
-  sudo umount "${options[@]}" "$mount_point"
+  local cmd="sudo umount ${options[@]} \"${mount_point}\""
+  echo "${cmd}"
+  eval "${cmd}"
   # clean if succeed
   local return_status="$?"
   if [ "$return_status" = 0 ]; then
