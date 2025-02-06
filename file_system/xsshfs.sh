@@ -60,9 +60,11 @@ xsshfs() {
     return 1
   fi
   # mount target
-  echo "sudo sshfs "${options[@]}" $user@$ip:$src_dir $mount_point"
   sudo mkdir -p "$mount_point"
-  sudo sshfs "${options[@]}" "$user"@"$ip":"$src_dir" "$mount_point"
+  local cmd="sudo sshfs ${options[@]} \"${user}\"@\"${ip}\":\"${src_dir}\" \"${mount_point}\""
+  echo "${cmd}"
+  eval "${cmd}"
+  
   # clean if failed
   local return_status="$?"
   if [ "$return_status" != 0 ]; then
